@@ -8,8 +8,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.example.cardatabase.firstapp.domain.AppUser;
 import com.example.cardatabase.firstapp.domain.Car;
 import com.example.cardatabase.firstapp.domain.Owner;
+import com.example.cardatabase.firstapp.model.AppUserRepository;
 import com.example.cardatabase.firstapp.model.CarRepository;
 import com.example.cardatabase.firstapp.model.OwnerRepository;
 
@@ -33,10 +35,15 @@ public class FirstappApplication implements CommandLineRunner
 
 	private final CarRepository repository;
 	private final OwnerRepository orepository;
+	//Finally, we can save a couple of test users to the database using the CommandLineRunner 
+	//interface.
+	private final AppUserRepository urepository;
+
 	
-	public FirstappApplication(CarRepository repository, OwnerRepository orepository) {
+	public FirstappApplication(CarRepository repository, OwnerRepository orepository, AppUserRepository urepository) {
 		this.repository = repository;
 		this.orepository = orepository;
+		this.urepository = urepository;
 	}
 	
 	
@@ -54,27 +61,41 @@ public class FirstappApplication implements CommandLineRunner
 		Owner owner2 = new Owner("Megumi", "Fushiguro");
 	    orepository.saveAll(Arrays.asList(owner1, owner2));
 		
+	    String imageUrlFord =   "https://drive.google.com/file/d/1_MSnH0c7VRorEN1DYDk9ZmXIdPazi77X/view";
+	    String imageUrlNissan = "https://drive.google.com/file/d/1Zro7ZhMXywjv8pmzjVY53yL4619ZYKNL/view";
+	    String imageUrlToyota = "https://drive.google.com/file/d/19FvfUyJ1ucPwqeUAw9lG1pVOkd1-vVgA/view";
 		
 		
 		//this saves the newly created car objects to the repository
 		//the spring data jpa repository that can save entites
 		repository.save(new Car("Ford", "Mustang", "Red",
-                "ADF-1121", 2023, 59000, owner2));
+                "ADF-1121", 2023, 59000, imageUrlFord, owner2));
 		//like this one this saves the newly created car objects to the repository
 		//the spring data jpa repository that can save entites
 		 repository.save(new Car("Nissan", "Leaf", "White",
-                 "SSJ-3002", 2020, 29000,owner1));
+                 "SSJ-3002", 2020, 29000, imageUrlNissan, owner1));
 	   //And this One saves the newly created car objects to the repository
 			//the spring data jpa repository that can save entites	 
        repository.save(new Car("Toyota", "Prius",
-                 "Silver", "KKO-0212", 2022, 39000,owner1));
-       
+                 "Silver", "KKO-0212", 2022, 39000, imageUrlToyota, owner1));
+         
        //fetch all cars and log to console
        for(Car car : repository.findAll())
        {
     	   logger.info("brand: {}, model: {}",
                    car.getBrand(), car.getModel());
        }
+       
+       //Let’s save two users to the database with bcrypt hashed passwords. You can find bcrypt 
+       // calculators or generators on the internet. These generators allow you to input a plaintext 
+       //password, and they will produce the corresponding bcrypt hash
+   
+       urepository.save(new AppUser("user", 
+               "$2a$10$NVM0n8ElaRgg7zWO1CxUdei7vWoPg91Lz2aYavh9.f9q0e4bRadue","USER"));
+       
+       // Username: admin, password: admin
+       urepository.save(new AppUser("admin", 
+           "$2a$10$8cjz47bjbR4Mn8GMg9IZx.vyjhLXR/SKKMSZ9.mP9vpMu0ssKi8GW", "ADMIN"));
 		
 	}
 	

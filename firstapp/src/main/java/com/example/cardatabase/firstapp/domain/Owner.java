@@ -2,6 +2,9 @@ package com.example.cardatabase.firstapp.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="Owner")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Owner {
 
 	
@@ -39,6 +43,7 @@ public class Owner {
 	  has the owner field, which is the foreign key for this
 	  relationship.
 	*/
+	 @JsonIgnore
 	 @OneToMany(cascade=CascadeType.ALL, mappedBy="owner")
 	 private List<Car> cars;
 	 
