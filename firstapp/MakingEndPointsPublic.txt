@@ -1,0 +1,50 @@
+How to make endpoints public!
+
+We are going to make cars and boats endpoints public,
+By the way, you do NOT have to make the base url / api endpoint public because
+it would expose all your API endpoints to unauthorized access, 
+which is a security risk. And your not accessing the base url, Your only
+Accessing the Cars and boats.
+
+How are the 1'2'3 notes on how to do this.
+
+1.In the SecurityConfig class go into the SecurityFilterChain method:
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.csrf((csrf) -> csrf.disable())
+        .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests((authorizeHttpRequests) ->
+            authorizeHttpRequests
+                .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                .anyRequest().authenticated()
+        )
+        .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+    http.exceptionHandling((exceptionHandling) -> exceptionHandling.authenticationEntryPoint(exceptionHandler))
+        .cors(withDefaults());
+
+    return http.build();
+}
+
+2.inside the SecurityFilterChain method you want to add another .requestMatchers
+for the cars and boats:
+   @Bean
+   public SecurityFilterChain filterChain(HttpSecurity http) throws  
+    Exception {
+      http.csrf((csrf) -> csrf.disable())
+      	
+          .sessionManagement((sessionManagement) -> sessionManagement. 
+              sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          .authorizeHttpRequests((authorizeHttpRequests) -> 
+              authorizeHttpRequests
+              .requestMatchers(HttpMethod.POST, "/login").permitAll()
+              .requestMatchers("/cars/**", "/boats/**").permitAll() // Add this line
+              .anyRequest().authenticated())
+          .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+      http.exceptionHandling((exceptionHandling) -> exceptionHandling. 
+                  authenticationEntryPoint(exceptionHandler))
+      .cors(withDefaults());
+      return http.build();
+   }
+   
+Thats it!

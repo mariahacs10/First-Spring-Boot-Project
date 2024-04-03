@@ -44,7 +44,7 @@ public class SecurityConfig {
 		  this.userDetailsService = userDetailsService;
 		  this.authenticationFilter = authenticationFilter;
 		  this.exceptionHandler = exceptionHandler;
-	}
+   }
 
    
    // Delete the userDetailsService() method 
@@ -78,7 +78,10 @@ public class SecurityConfig {
           .sessionManagement((sessionManagement) -> sessionManagement. 
               sessionCreationPolicy(SessionCreationPolicy.STATELESS))
           .authorizeHttpRequests((authorizeHttpRequests) -> 
-              authorizeHttpRequests.requestMatchers(HttpMethod.POST, "/login").permitAll().anyRequest().authenticated())
+              authorizeHttpRequests
+              .requestMatchers(HttpMethod.POST, "/login").permitAll()
+              .requestMatchers("/cars/**", "/boats/**").permitAll() // Add this line
+              .anyRequest().authenticated())
           .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
       http.exceptionHandling((exceptionHandling) -> exceptionHandling. 
                   authenticationEntryPoint(exceptionHandler))

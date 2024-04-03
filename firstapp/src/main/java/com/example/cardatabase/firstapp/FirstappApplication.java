@@ -9,9 +9,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.example.cardatabase.firstapp.domain.AppUser;
+import com.example.cardatabase.firstapp.domain.Boats;
 import com.example.cardatabase.firstapp.domain.Car;
 import com.example.cardatabase.firstapp.domain.Owner;
 import com.example.cardatabase.firstapp.model.AppUserRepository;
+import com.example.cardatabase.firstapp.model.BoatRepository;
 import com.example.cardatabase.firstapp.model.CarRepository;
 import com.example.cardatabase.firstapp.model.OwnerRepository;
 
@@ -35,14 +37,17 @@ public class FirstappApplication implements CommandLineRunner
 
 	private final CarRepository repository;
 	private final OwnerRepository orepository;
+	private final BoatRepository boatrepository;
+
 	//Finally, we can save a couple of test users to the database using the CommandLineRunner 
 	//interface.
 	private final AppUserRepository urepository;
 
-	
-	public FirstappApplication(CarRepository repository, OwnerRepository orepository, AppUserRepository urepository) {
+	//
+	public FirstappApplication(CarRepository repository, OwnerRepository orepository, BoatRepository boatrepository, AppUserRepository urepository) {
 		this.repository = repository;
 		this.orepository = orepository;
+		this.boatrepository = boatrepository;
 		this.urepository = urepository;
 	}
 	
@@ -61,9 +66,13 @@ public class FirstappApplication implements CommandLineRunner
 		Owner owner2 = new Owner("Megumi", "Fushiguro");
 	    orepository.saveAll(Arrays.asList(owner1, owner2));
 		
-	    String imageUrlFord =   "https://drive.google.com/file/d/1_MSnH0c7VRorEN1DYDk9ZmXIdPazi77X/view";
-	    String imageUrlNissan = "https://drive.google.com/file/d/1Zro7ZhMXywjv8pmzjVY53yL4619ZYKNL/view";
-	    String imageUrlToyota = "https://drive.google.com/file/d/19FvfUyJ1ucPwqeUAw9lG1pVOkd1-vVgA/view";
+	    String imageUrlFord =   "https://i.ibb.co/gwrm4wb/fordmustang.jpg";
+	    String imageUrlNissan = "https://i.ibb.co/VWSBKht/nissanleafwhite.jpg";
+	    String imageUrlToyota = "https://i.ibb.co/BKWCchF/toyotapriussilver.jpg";
+	    
+	    String imageUrlSeaDancer = "https://i.postimg.cc/GhkWj7Ds/bostonwhaler.jpg";
+	    String imageUrlBoston = "https://i.postimg.cc/GhkWj7Ds/bostonwhaler.jpg";
+	    String imageUrlChaparral = "https://i.postimg.cc/W1TQYGmY/chaparral.jpg";
 		
 		
 		//this saves the newly created car objects to the repository
@@ -78,6 +87,11 @@ public class FirstappApplication implements CommandLineRunner
 			//the spring data jpa repository that can save entites	 
        repository.save(new Car("Toyota", "Prius",
                  "Silver", "KKO-0212", 2022, 39000, imageUrlToyota, owner1));
+       
+       boatrepository.save(new Boats("Sea Ray Sundancer 350 Coupe Brand", "Sea Ray", "White", 2023, 600000, imageUrlSeaDancer));
+       boatrepository.save(new Boats("Boston Whaler 320 Vantage", "Boston Whaler", "White", 2022, 450000 , imageUrlBoston));
+       boatrepository.save(new Boats("Chaparral 337 SSX", "Chaparral", "Navy", 2021, 400000 , imageUrlChaparral));
+       
          
        //fetch all cars and log to console
        for(Car car : repository.findAll())
