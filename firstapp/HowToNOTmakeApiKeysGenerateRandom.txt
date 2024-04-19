@@ -1,0 +1,29 @@
+4/18/2024
+
+my issue was i was using String.randomUUID() And that is NOT The way to do it
+you have to create a seperate class with the apikeys you want to have, this is what it should look like:
+
+public class ApiKeys {
+    public static final String API_KEY = "your-api-key";
+    public static final String ARTWORK_API_KEY = "your-artwork-api-key";
+}
+
+@Service
+public class ApiKeyService {
+
+    public String getRegularApiKey() {
+        return ApiKeys.API_KEY ;
+    }
+
+    public String getArtworkApiKey() {
+        return ApiKeys.ARTWORK_API_KEY;
+    }
+
+    public boolean validateApiKey(String apiKey) {
+        return apiKey.equals(ApiKeys.API_KEY );
+    }
+
+    public boolean validateArtworkApiKey(String apiKey) {
+        return apiKey.equals(ApiKeys.ARTWORK_API_KEY);
+    }
+}

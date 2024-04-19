@@ -1,0 +1,85 @@
+4/18/2024
+
+THIS IS TOTALLY OPTIONAL!:
+
+i learned how to create / use .env files because i am pushing my code with apikeys to github
+and i do not want them getting exposed so this is the best practice for you to do this, The .env 
+file is a common way to store environment-specific configuration values, such 
+as API keys, database credentials, and other sensitive information that should not 
+be committed to source control (e.g., Git repositories like GitHub).
+
+
+Step 1.Set up your dependincies you want to add the dot env dependinces in your pom.xml:
+
+<repositories>
+     <repository>
+        <id>jcenter</id>
+         <url>https://jcenter.bintray.com</url>
+</repository>
+</repositories>
+
+<dependency>
+	groupId>io.github.cdimascio</groupId>
+	<artifactId>dotenv-java</artifactId>
+	<version>2.2.4</version>
+</dependency>
+
+Step 2.You want to create your .env file in your spring boot app, So right click the root package
+and just type in .env and NOTHING else and hit ok
+
+Step 3.you want to add the api key information it should look exactly like this no spaces
+or anything, (remember to save it) it should disappear once you save it:
+(THESE API KEYS ARE RANDOM!, Not from my api keys)
+
+API_KEY=UtZtczMFJpxuXGTicpEpaHItWzmNuNwB
+ARTWORK_API_KEY=BydReUeQFjIjbFTRumcSSInIKbKHwVoZ
+
+Step 4.you NEEEEED to set environment variables on Windows before running 
+your Spring Boot application Open Command Prompt and type:
+
+setx API_KEY UtZtczMFJpxuXGTicpEpaHItWzmNuNwB
+setx ARTWORK_API_KEY BydReUeQFjIjbFTRumcSSInIKbKHwVoZ
+
+Step 5.In your ApiKeyService you want to delete the class Apikeys because now there stored
+in the enviorment variable, and you want to do system.getenv() which is going to get the
+information from the .env file:
+
+@Service
+public class ApiKeyService {
+   //private static final Logger log = LoggerFactory.getLogger(ApiKeyService.class);
+	
+   public static final String API_KEY = System.getenv("API_KEY");
+
+   public static final String ART_API_KEY = System.getenv("ARTWORK_API_KEY");
+
+    public String generateApiKey() {
+    	return API_KEY;
+    }
+
+    public String generateArtworkApiKey() {
+        return ART_API_KEY;
+    }
+
+    public boolean validateApiKey(String apiKey) {
+        return API_KEY.contains(apiKey);
+    }
+
+    public boolean validateArtworkApiKey(String apiKey) {
+        return ART_API_KEY.contains(apiKey);
+    }
+}
+
+Step 6. In the Main method of the main class you need to add:
+
+Dotenv.load();
+
+And make sure the methods in initApiKeys() changed:
+
+ @PostConstruct
+  public void initApiKeys() {
+	      String apiKey = apiKeyService.generateArtworkApiKey();
+	      System.out.println("Generated ART api key: " + apiKey);
+	      
+	      String apiKey2 = apiKeyService.generateApiKey();
+	      System.out.println("Generated API key: " + apiKey2);
+}

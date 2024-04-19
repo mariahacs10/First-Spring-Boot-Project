@@ -1,0 +1,314 @@
+4/18/2024
+
+If you dont have your second or third table created for the database yet and need help on how to start it please follow
+these steps:
+
+
+Step 1.If you dont have the ArtWork entity,Controller and Repository set up you'll need to add this
+(I'm assuming you already have cars and boats set up)
+
+Step 2.In the ArtWork entity class is for the CRUD operatiosn for the controller and repository
+interface:
+
+@Entity
+@Table(name="artwork")
+public class ArtWork {
+
+	@Id
+	@GeneratedValue
+	private Long artWorkId;
+	private String authorName;
+	private String authorTitle;
+	private String authorDescription;
+	
+    private String authorImageUrl; 
+	
+	public ArtWork(String authorName, String authorTitle, String authorDescription, String authorImageUrl)
+	{
+		this.authorName = authorName;
+		this.authorTitle = authorTitle;
+		this.authorDescription = authorDescription;
+		this.authorImageUrl = authorImageUrl;	
+	}
+	
+	public Long getArtWorkId()
+	{
+		return artWorkId;
+	}
+	
+	public void setArtWorkId(Long artWorkId)
+	{
+		this.artWorkId = artWorkId;
+	}
+	
+	public String getAuthorName()
+	{
+		return authorName;
+	}
+	
+	public void setAuthorName(String authorName)
+	{
+		this.authorName = authorName;
+	}
+	
+	public String getAuthorTitle()
+	{
+		return authorTitle;
+	}
+	
+	public void setAuthorTitle(String authorTitle)
+	{
+		this.authorTitle = authorTitle;
+	}
+	
+	public String getAuthorDescription()
+	{
+		return authorDescription;
+	}
+	
+	public void setAuthorDescription(String authorDescription)
+	{
+		this.authorDescription = authorDescription;
+	}
+	
+	public String getAuthorImageUrl()
+	{
+		return authorImageUrl;
+	}
+	
+	public void setAuthorImageUrl(String authorImageUrl)
+	{
+		this.authorImageUrl = authorImageUrl;
+	}
+	public ArtWork()
+	{
+		super();
+	}
+}
+
+
+Step 3.You want to create your Repository class:
+
+public interface ArtWorkRepository extends JpaRepository<ArtWork,Long>{
+
+}
+
+Step 4.Your going to create your controller class and this is going to hold the artWork
+endpoint logic:
+
+@RestController
+
+public class ArtWorkController {
+	
+	private final ArtWorkRepository repository;
+    
+    public ArtWorkController(ArtWorkRepository repository) {
+        this.repository = repository;
+    }
+    
+    @GetMapping("/artWork")
+	public Iterable<ArtWork> getArtWork(){
+		//fetch and return cars
+        return repository.findAll();
+	}
+    
+}
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+MOVING ON TO HOW TO CREATE SEPERATE API KEYS!
+
+Step 1.Create your Apikeys class to store your apikeys you want to use in here:
+public class ApiKeys {
+    public static final String API_KEY = "your-api-key";
+    public static final String ARTWORK_API_KEY = "your-artwork-api-key";
+}
+
+Step 2.Create your ApikeyService this is going to hold the methods generation of the apiKeys
+and also validating them:
+
+@Service
+public class ApiKeyService {
+
+    public String getRegularApiKey() {
+        return ApiKeys.API_KEY ;
+    }
+
+    public String getArtworkApiKey() {
+        return ApiKeys.ARTWORK_API_KEY;
+    }
+
+    public boolean validateApiKey(String apiKey) {
+        return apiKey.equals(ApiKeys.API_KEY );
+    }
+
+    public boolean validateArtworkApiKey(String apiKey) {
+        return apiKey.equals(ApiKeys.ARTWORK_API_KEY);
+    }
+}
+
+Step 3.Create your ApiKeyFilter this will  intercept incoming requests to validate
+the API key.the doFilterInternal() method checks the request URL and filter will set the
+appropriate authentication in the SecurityContext if the API key is valid, and return a 401
+Unauthorized response if the API key is not valid.
+
+@Component
+public class ApiKeyFilter extends OncePerRequestFilter {
+    private final ApiKeyService apiKeyService;
+
+  private static final Logger log = (Logger) LoggerFactory.getLogger(ApiKeyFilter.class);
+    private static final String API_KEY_PARAM = "apiKey";
+
+    public ApiKeyFilter(ApiKeyService apiKeyService) {
+        this.apiKeyService = apiKeyService;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String apiKey = request.getParameter(API_KEY_PARAM);
+        log.info("Received API key: {}", apiKey);
+
+        if (apiKey != null && !apiKey.isEmpty()) {
+            if (isArtworkRequest(request)) {
+                if (apiKeyService.validateArtworkApiKey(apiKey)) {
+                    setAuthentication(apiKey);
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+            } else {
+                if (apiKeyService.validateApiKey(apiKey)) {
+                    setAuthentication(apiKey);
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+            }
+        }
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write("Invalid API key.");
+    }
+
+    private boolean isArtworkRequest(HttpServletRequest request) {
+        String requestUrl = request.getRequestURI();
+        return requestUrl.startsWith("/artWork");
+    }
+
+    private void setAuthentication(String apiKey) {
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(apiKey, null, Collections.singletonList(new SimpleGrantedAuthority("apiKey")));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+}
+
+Step 4.In the SecurityConfig class you have a filterchain mehtod and in there you'll want to 
+ separate authorization rules for the Cars/Boats entities and the Artwork entity.
+
+(@Bean: The @Bean annotation is used to indicate that a method instantiates, configures and initializes a new object)
+
+ @Bean
+   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+       http.csrf((csrf) -> csrf.disable())
+           .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+           .addFilterAfter(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
+           .authorizeHttpRequests((authorizeHttpRequests) ->
+               authorizeHttpRequests
+                   .requestMatchers("/cars/**", "/boats/**").hasAuthority("apiKey")
+                   .requestMatchers("/artWork/**").hasAnyAuthority("apiKey")
+                   .anyRequest().authenticated())
+           .cors(withDefaults());
+
+       return http.build();
+   }
+   
+full class:
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+	
+   private final UserDetailsServiceImpl userDetailsService;
+ 
+   private final ApiKeyFilter apiKeyFilter;
+   
+   public SecurityConfig(UserDetailsServiceImpl userDetailsService, ApiKeyFilter apiKeyFilter) {
+		  this.userDetailsService = userDetailsService;
+	      this.apiKeyFilter = apiKeyFilter;
+   }
+
+   
+   // Delete the userDetailsService() method 
+   //from the SecurityConfig class to disable in-memory users. Add a new configureGlobal 
+   // method to enable users from the database
+   public void configureGlobal (AuthenticationManagerBuilder auth)
+	throws Exception {
+	     auth.userDetailsService(userDetailsService)
+	     .passwordEncoder(new BCryptPasswordEncoder());
+   }
+   
+   // Now, the password must be hashed using bcrypt before it’s saved to the database.
+   @Bean
+   public PasswordEncoder passwordEncoder() {
+       return new BCryptPasswordEncoder();
+   }
+   
+   @Bean
+   public AuthenticationManager authenticationManager(
+     AuthenticationConfiguration authConfig) throws Exception {
+       return authConfig.getAuthenticationManager();
+   }
+  
+   @Bean
+   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+       http.csrf((csrf) -> csrf.disable())
+           .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+           .addFilterAfter(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
+           .authorizeHttpRequests((authorizeHttpRequests) ->
+               authorizeHttpRequests
+                   .requestMatchers("/cars/**", "/boats/**").hasAuthority("apiKey")
+                   .requestMatchers("/artWork/**").hasAnyAuthority("apiKey")
+                   .anyRequest().authenticated())
+           .cors(withDefaults());
+
+       return http.build();
+   }
+   
+   
+   
+   // Define the CorsConfigurationSource bean
+   @Bean
+   public CorsConfigurationSource corsConfigurationSource() {
+	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	    CorsConfiguration config = new CorsConfiguration();
+	    config.setAllowedOrigins(Arrays.asList("*"));
+	    config.setAllowedMethods(Arrays.asList("*"));
+	    config.setAllowedHeaders(Arrays.asList("*"));
+	    config.setAllowCredentials(false);
+	    config.applyPermitDefaultValues();
+	
+	    source.registerCorsConfiguration("/**", config);
+	    return source;
+   }
+  
+}
+
+
+Step 5.In the Main class add the method to generate the keys in the console
+ private final ApiKeyService apiKeyService;
+    public FirstappApplication(CarRepository repository, OwnerRepository orepository, BoatRepository boatrepository,
+			AppUserRepository urepository,ApiKeyService apiKeyService, ArtWorkRepository artWorkRepository) {
+		this.repository = repository;
+		this.orepository = orepository;
+		this.boatrepository = boatrepository;
+		this.urepository = urepository;
+		this.apiKeyService = apiKeyService;
+		this.artWorkRepository = artWorkRepository;
+	}
+@PostConstruct
+	 public void initApiKeys() {
+	      String apiKey = apiKeyService.generateArtworkApiKey();
+	      System.out.println("Generated ART api key: " + apiKey);
+	      
+	      String apiKey2 = apiKeyService.generateApiKey();
+	      System.out.println("Generated API key: " + apiKey2);
+	 }

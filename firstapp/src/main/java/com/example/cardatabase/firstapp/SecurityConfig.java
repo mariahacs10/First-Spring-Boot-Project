@@ -1,5 +1,10 @@
 package com.example.cardatabase.firstapp;
 
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,36 +19,28 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.example.cardatabase.firstapp.service.UserDetailsServiceImpl;
-import java.util.Arrays;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import static org.springframework.security.config.Customizer.withDefaults;
+
+import com.example.cardatabase.firstapp.service.UserDetailsServiceImpl;
 
 //The @Configuration and @EnableWebSecurity annotations switch off the default web se
 //curity configuration, and we can define our own configuration in this class. Inside the 
 //filterChain(HttpSecurity http) method that we will see in action later, we can define which 
 //endpoints in our application are secure and which are not. We don’t actually need this method 
 //yet because we can use the default settings where all the endpoints are secured.
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 	
    private final UserDetailsServiceImpl userDetailsService;
-   private final AuthenticationFilter authenticationFilter;
+ 
+   private final ApiKeyFilter apiKeyFilter;
    
-   //Then we have to configure Spring Security for the exception handling.
-   //Inject our AuthEntryPoint class into the SecurityConfig class
-   private final AuthEntryPoint exceptionHandler;
-
-   
-   public SecurityConfig(UserDetailsServiceImpl userDetailsService,AuthenticationFilter authenticationFilter, AuthEntryPoint exceptionHandler) {
+   public SecurityConfig(UserDetailsServiceImpl userDetailsService, ApiKeyFilter apiKeyFilter) {
 		  this.userDetailsService = userDetailsService;
-		  this.authenticationFilter = authenticationFilter;
-		  this.exceptionHandler = exceptionHandler;
+	      this.apiKeyFilter = apiKeyFilter;
    }
 
    
@@ -63,31 +60,26 @@ public class SecurityConfig {
    }
    
    @Bean
-   public AuthenticationManager uthenticationManager(
+   public AuthenticationManager authenticationManager(
      AuthenticationConfiguration authConfig) throws Exception {
        return authConfig.getAuthenticationManager();
    }
-   
-   
   
    @Bean
-   public SecurityFilterChain filterChain(HttpSecurity http) throws  
-    Exception {
-      http.csrf((csrf) -> csrf.disable())
-      	
-          .sessionManagement((sessionManagement) -> sessionManagement. 
-              sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-          .authorizeHttpRequests((authorizeHttpRequests) -> 
-              authorizeHttpRequests
-              .requestMatchers(HttpMethod.POST, "/login").permitAll()
-              .requestMatchers("/cars/**", "/boats/**").permitAll() // Add this line
-              .anyRequest().authenticated())
-          .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-      http.exceptionHandling((exceptionHandling) -> exceptionHandling. 
-                  authenticationEntryPoint(exceptionHandler))
-      .cors(withDefaults());
-      return http.build();
+   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+       http.csrf((csrf) -> csrf.disable())
+           .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+           .addFilterAfter(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
+           .authorizeHttpRequests((authorizeHttpRequests) ->
+               authorizeHttpRequests
+                   .requestMatchers("/cars/**", "/boats/**").hasAuthority("apiKey")
+                   .requestMatchers("/artWork/**").hasAnyAuthority("apiKey")
+                   .anyRequest().authenticated())
+           .cors(withDefaults());
+
+       return http.build();
    }
+   
    
    
    // Define the CorsConfigurationSource bean
