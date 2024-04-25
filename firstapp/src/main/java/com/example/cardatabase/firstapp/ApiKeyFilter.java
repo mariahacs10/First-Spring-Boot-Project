@@ -47,25 +47,18 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+    	//To use the X-Api-Key header instead of a query parameter, you need to make changes in both your client code (where you send the request) and the server-side code (where you receive and validate the API key).
+    	//On the client-side (e.g., Postman or your frontend application), you need to set the X-Api-Key header with the appropriate value instead of sending it as a query parameter.
+    	//On the server-side, you need to modify the ApiKeyFilter class to read the API key from the X-Api-Key header instead of the request parameter
     	
-    	//this line retrieves the value of the request parameter with the name
-    	//specified by APIKEYPARAM and assigns it to the apikey variable
-        String apiKey = request.getParameter(API_KEY_PARAM);
+    	//In this modified code, we're using request.getHeader("X-Api-Key") to retrieve the value of the X-Api-Key header instead of request.getParameter(API_KEY_PARAM).
+       //This is the only line you need to change!
+    	String apiKey = request.getHeader("X-Api-Key");
         log.info("Received API key: {}", apiKey);
 
-        //This block checks if the apiKey variable is not null and
-        //not an empty string. If the condition is true, it proceeds to the
-        //next step; otherwise, it skips to the end of the method.
         if (apiKey != null && !apiKey.isEmpty()) {
-        	//This block checks if the incoming request is for the Artwork 
-        	//entity by calling the isArtworkRequest method.
             if (isArtworkRequest(request)) {
-            	//If it is an Artwork request, it calls the validateArtworkApiKey method
-            	//from the ApiKeyService to validate the provided API key.
                 if (apiKeyService.validateArtworkApiKey(apiKey)) {
-                	//If the API key is valid, it calls the setAuthentication
-                	//method to set the appropriate authentication in the SecurityContext,
-                	//and then calls filterChain.doFilter to continue processing the request.
                     setAuthentication(apiKey);
                     filterChain.doFilter(request, response);
                     return;
@@ -79,8 +72,6 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             }
         }
 
-        //If the API key is not valid (either for Artwork or other entities), these lines set the response status code to 401 (Unauthorized)
-        //and write the message "Invalid API key." to the response body.
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write("Invalid API key.");
     }

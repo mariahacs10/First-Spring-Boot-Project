@@ -74,6 +74,7 @@ public class SecurityConfig {
                authorizeHttpRequests
                    .requestMatchers("/cars/**", "/boats/**").hasAuthority("apiKey")
                    .requestMatchers("/artWork/**").hasAnyAuthority("apiKey")
+                   .requestMatchers("/api/search/**").permitAll() // Add this line to allow public access
                    .anyRequest().authenticated())
            .cors(withDefaults());
 

@@ -19,6 +19,7 @@ import com.example.cardatabase.firstapp.model.BoatRepository;
 import com.example.cardatabase.firstapp.model.CarRepository;
 import com.example.cardatabase.firstapp.model.OwnerRepository;
 import com.example.cardatabase.firstapp.service.ApiKeyService;
+import com.example.cardatabase.firstapp.service.SearchService;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
@@ -51,9 +52,11 @@ public class FirstappApplication implements CommandLineRunner
 	private final AppUserRepository urepository;
 	
     private final ApiKeyService apiKeyService;
+   
     
 	public FirstappApplication(CarRepository repository, OwnerRepository orepository, BoatRepository boatrepository,
-			AppUserRepository urepository,ApiKeyService apiKeyService, ArtWorkRepository artWorkRepository) {
+			AppUserRepository urepository,ApiKeyService apiKeyService, 
+			ArtWorkRepository artWorkRepository) {
 		this.repository = repository;
 		this.orepository = orepository;
 		this.boatrepository = boatrepository;

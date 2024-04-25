@@ -1,0 +1,21 @@
+To use the X-Api-Key header instead of a query parameter, you need to make changes in both your client code 
+(where you send the request) and the server-side code (where you receive and validate the API key).
+On the client-side (e.g., Postman or your frontend application), you need to set the X-Api-Key header with the appropriate value instead of
+sending it as a query parameter.
+On the server-side, you need to modify the ApiKeyFilter class to read the 
+API key from the X-Api-Key header instead of the request parameter. Here's how you can modify the doFilterInternal method:
+
+ @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+    	
+    	//This is the only line you need to change!
+    	String apiKey = request.getHeader("X-Api-Key");
+        log.info("Received API key: {}", apiKey);
+
+       ......othermethods.....
+}
+
+What was the change?:
+
+We're using request.getHeader("X-Api-Key") to retrieve the value of the X-Api-Key header instead of request.getParameter(API_KEY_PARAM).
