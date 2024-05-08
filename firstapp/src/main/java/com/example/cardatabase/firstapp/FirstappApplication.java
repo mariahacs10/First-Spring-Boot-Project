@@ -89,14 +89,29 @@ public class FirstappApplication implements CommandLineRunner
 		Owner owner1 = new Owner("Satoru", "Gojo");
 		Owner owner2 = new Owner("Megumi", "Fushiguro");
 	    orepository.saveAll(Arrays.asList(owner1, owner2));
+	    
+	    /**API IMAGES */
 		
 	    String imageUrlFord =   "https://i.ibb.co/gwrm4wb/fordmustang.jpg";
 	    String imageUrlNissan = "https://i.ibb.co/VWSBKht/nissanleafwhite.jpg";
 	    String imageUrlToyota = "https://i.ibb.co/BKWCchF/toyotapriussilver.jpg";
+	    String imageUrlBmw7Series = "https://i.ibb.co/wN6yT9z/bmw7series.jpg";
+	    String imageUrlHondaCivicEX = "https://i.ibb.co/8MZLMRJ/hondacivic-EX.jpg";
+	    String imageUrlMercedesBENZ = "https://i.ibb.co/ZNbWDTH/mercedes-BENZ.jpg";
+	    String imageUrlTeslaModelS = "https://i.ibb.co/Vp6hdxK/tesla-Model-S.jpg";
+	    String imageUrlVolkswagenID = "https://i.ibb.co/rb9h2tR/volkswagen-ID.jpg";
+	    
 	    
 	    String imageUrlSeaDancer = "https://i.postimg.cc/CLsSxJyL/searaysundancer.jpg";
 	    String imageUrlBoston = "https://i.postimg.cc/GhkWj7Ds/bostonwhaler.jpg";
 	    String imageUrlChaparral = "https://i.postimg.cc/W1TQYGmY/chaparral.jpg";
+	    
+	    String imageUrlAzimut = "https://i.ibb.co/RpX9Fdb/azimut.jpg";
+	    String imageUrlBertram = "https://i.ibb.co/MfQVp8Q/bertram.jpg";
+	    String imageUrlCruiserYatch = "https://i.ibb.co/7YpTRH2/cruiser-Yatch.jpg";
+	    String imageUrlEverGlades = "https://i.ibb.co/kHGLRXZ/everglades.jpg";
+	    String imageUrlMalibu = "https://i.ibb.co/Dp0m12C/malibu.jpg";
+	    
 	    
 	    String jjkImage1 = "https://i.postimg.cc/3rtbd3v4/jjkimage1.jpg";
 	    String jjkImage2 = "https://i.postimg.cc/MKX3Bg7s/jjkimage2.jpg";
@@ -113,22 +128,26 @@ public class FirstappApplication implements CommandLineRunner
 	    String jjkImage13 = "https://i.postimg.cc/c4VhnC4H/jjkimage13.jpg";
 		
 		
-		//this saves the newly created car objects to the repository
-		//the spring data jpa repository that can save entites
-		repository.save(new Car("Ford", "Mustang", "Red",
-                "ADF-1121", 2023, 59000, imageUrlFord, owner2));
-		//like this one this saves the newly created car objects to the repository
-		//the spring data jpa repository that can save entites
-		 repository.save(new Car("Nissan", "Leaf", "White",
-                 "SSJ-3002", 2020, 29000, imageUrlNissan, owner1));
-	   //And this One saves the newly created car objects to the repository
-			//the spring data jpa repository that can save entites	 
-       repository.save(new Car("Toyota", "Prius",
-                 "Silver", "KKO-0212", 2022, 39000, imageUrlToyota, owner1));
+	   repository.save(new Car("Ford", "Mustang", "Red","ADF-1121", 2023, 59000, imageUrlFord, owner2));
+	   repository.save(new Car("Nissan", "Leaf", "White", "SSJ-3002", 2020, 29000, imageUrlNissan, owner1));
+       repository.save(new Car("Toyota", "Prius","Silver", "KKO-0212", 2022, 39000, imageUrlToyota, owner1));
+       repository.save(new Car("BMW", "7 Series","Alpine White", "BMW789", 2024, 95000, imageUrlBmw7Series, owner2));
+       repository.save(new Car("Honda", "Civic EX", "Modern Steel Metallic", "HONDA012", 2021, 25000, imageUrlHondaCivicEX, owner2)); 
+       repository.save(new Car("Mercedes-Benz", "E-Class","Obsidian Black", "MBZ345", 2023, 70000, imageUrlMercedesBENZ, owner1));
+       repository.save(new Car("Tesla", "Model S","Midnight Blue", "TSLA123", 2023, 85000, imageUrlTeslaModelS, owner1));
+       repository.save(new Car("Volkswagen", "ID.4","Manganese Gray Metallic", "VW005", 2024, 39900, imageUrlVolkswagenID, owner1));
+       
        
        boatrepository.save(new Boats("Sea Ray Sundancer 350 Coupe Brand", "Sea Ray", "White", 2023, 600000, imageUrlSeaDancer));
        boatrepository.save(new Boats("Boston Whaler 320 Vantage", "Boston Whaler", "White", 2022, 450000 , imageUrlBoston));
        boatrepository.save(new Boats("Chaparral 337 SSX", "Chaparral", "Navy", 2021, 400000 , imageUrlChaparral));
+       boatrepository.save(new Boats("Azimut", "Magellano 25 METRI", "Blue-White", 2021, 400000 , imageUrlAzimut));
+       boatrepository.save(new Boats("Bertram", "39CC", "White", 2023, 89990000 , imageUrlBertram));
+       boatrepository.save(new Boats("Cruisers yachts", "42 GLS outboard", "black", 2023, 161954700 , imageUrlCruiserYatch));
+       boatrepository.save(new Boats("Everglades", "Everglades", "blue", 2024, 90000, imageUrlEverGlades));
+       boatrepository.save(new Boats("Malibu", "M-SERIES M240", "red", 2022, 184995 , imageUrlMalibu));
+       
+       
        
        artWorkRepository.save(new ArtWork("Erika Allen", "Gojo", "blank", jjkImage1));
        artWorkRepository.save(new ArtWork("Erika Allen", "Gojo", "blank", jjkImage2));

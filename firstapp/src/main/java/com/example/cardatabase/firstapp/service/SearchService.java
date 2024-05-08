@@ -28,4 +28,8 @@ public class SearchService {
             Integer boatModelYear, Integer boatPrice) {
 	return boatRepository.searchBoats(boatBrand, boatModel, boatColor, boatModelYear, boatPrice);
 	}
+    
+    public List<Car> getAllCars() {
+        return carRepository.findAll();
+    }
 }

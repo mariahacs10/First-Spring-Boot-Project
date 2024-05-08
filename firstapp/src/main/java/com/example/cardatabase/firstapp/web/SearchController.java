@@ -22,12 +22,17 @@ public class SearchController {
 
     @GetMapping("/cars")
     public List<Car> searchCars(@RequestParam(value = "brand", required = false) String brand,
-                                @RequestParam(value = "model", required = false) String model,
-                                @RequestParam(value = "color", required = false) String color,
-                                @RequestParam(value = "registrationNumber", required = false) String registrationNumber,
-                                @RequestParam(value = "modelYear", required = false) Integer modelYear,
-                                @RequestParam(value = "price", required = false) Integer price) {
-        return searchService.searchCars(brand, model, color, registrationNumber, modelYear, price);
+                                 @RequestParam(value = "model", required = false) String model,
+                                 @RequestParam(value = "color", required = false) String color,
+                                 @RequestParam(value = "registrationNumber", required = false) String registrationNumber,
+                                 @RequestParam(value = "modelYear", required = false) Integer modelYear,
+                                 @RequestParam(value = "price", required = false) Integer price) {
+        if (brand == null && model == null && color == null && registrationNumber == null && modelYear == null && price == null) {
+            // No parameters provided, return all cars
+            return searchService.getAllCars();
+        } else {
+            return searchService.searchCars(brand, model, color, registrationNumber, modelYear, price);
+        }
     }
 
     @GetMapping("/boats")
