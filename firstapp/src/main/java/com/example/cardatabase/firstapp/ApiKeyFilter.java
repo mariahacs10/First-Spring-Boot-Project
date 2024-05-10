@@ -35,7 +35,6 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     private static final Logger log = (Logger) LoggerFactory.getLogger(ApiKeyFilter.class);
     //This line declares a constant APIKEYPARAM that holds the name of the request
     //parameter used to pass the apikey
-    private static final String API_KEY_PARAM = "apiKey";
 
     public ApiKeyFilter(ApiKeyService apiKeyService) {
         this.apiKeyService = apiKeyService;
@@ -73,7 +72,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         }
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("Invalid API key.");
+       response.getWriter().write("Invalid API key.");
     }
 
     //This is a private helper method that checks if the incoming request is for the

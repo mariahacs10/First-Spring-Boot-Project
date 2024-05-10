@@ -1,5 +1,6 @@
 package com.example.cardatabase.firstapp.web;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -7,6 +8,8 @@ import com.example.cardatabase.firstapp.domain.Boats;
 import com.example.cardatabase.firstapp.model.BoatRepository;
 
 @RestController
+@CrossOrigin("http://192.168.68.115:3000")
+
 public class BoatController {
 	
 	private final BoatRepository repository;

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.example.cardatabase.firstapp.domain.AppUser;
 import com.example.cardatabase.firstapp.domain.ArtWork;
@@ -19,7 +20,6 @@ import com.example.cardatabase.firstapp.model.BoatRepository;
 import com.example.cardatabase.firstapp.model.CarRepository;
 import com.example.cardatabase.firstapp.model.OwnerRepository;
 import com.example.cardatabase.firstapp.service.ApiKeyService;
-import com.example.cardatabase.firstapp.service.SearchService;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
@@ -54,8 +54,8 @@ public class FirstappApplication implements CommandLineRunner
     private final ApiKeyService apiKeyService;
    
     
-	public FirstappApplication(CarRepository repository, OwnerRepository orepository, BoatRepository boatrepository,
-			AppUserRepository urepository,ApiKeyService apiKeyService, 
+	public FirstappApplication(CarRepository repository, OwnerRepository orepository, ApiKeyService apiKeyService, BoatRepository boatrepository,
+			AppUserRepository urepository,
 			ArtWorkRepository artWorkRepository) {
 		this.repository = repository;
 		this.orepository = orepository;
@@ -72,7 +72,7 @@ public class FirstappApplication implements CommandLineRunner
 		SpringApplication.run(FirstappApplication.class, args);
 	}
 	
-	 @PostConstruct
+	@PostConstruct
 	 public void initApiKeys() {
 	      String apiKey = apiKeyService.generateArtworkApiKey();
 	      System.out.println("Generated ART api key: " + apiKey);
