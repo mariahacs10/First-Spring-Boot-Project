@@ -1,0 +1,38 @@
+What was my problem?:
+
+I was doing TOOOO much, i thought i needed the same url for both react and spring boot, i thought that if i launched
+my spring boot application in the web browser i should be able to run it and see the react app but that was not the case.
+
+
+How did i fix the issue?:
+
+Even when combined functionally, React frontend and Spring Boot backend applications typically have separate URLs during local 
+development. Here's why:
+
+React Frontend: The React frontend usually runs on a development server like Create React App's default server. 
+This server serves the static React application files (HTML, CSS, JavaScript). 
+You typically access it using localhost:3000 (or a different port depending on your setup).
+
+Spring Boot Backend: The Spring Boot backend application runs as a separate server process. It exposes API endpoints that
+your React frontend can interact with. The port for the backend might be different from the React development server's port.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Verifying Functionality:
+
+You can verify your React application functionality by accessing localhost:3000 in your browser. This loads the React frontend user interface.
+You cannot directly access the Spring Boot backend in a browser to see its functionality. Its purpose is to provide data and functionalities through API endpoints.
+Using Postman for Backend Verification:
+
+You can use Postman to test and interact with your Spring Boot backend API endpoints directly.
+In Postman, set the base URL to http://localhost:8080 (or your specific backend port).
+Then, for each API endpoint, define the specific path (e.g., /api/items) and HTTP method (e.g., GET) in Postman's request builder.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In Summary:
+
+Use localhost:3000 to access your React frontend UI.
+Use Postman to test and interact with your Spring Boot backend API endpoints using the appropriate base URL and path for each endpoint.
+There are separate URLs because they are separate applications serving different purposes, even though they work together.
