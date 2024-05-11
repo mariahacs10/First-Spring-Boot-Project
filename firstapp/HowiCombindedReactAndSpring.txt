@@ -1,0 +1,59 @@
+My first problem was maven command line prompt, i needed to do this:
+mvnw.cmd spring-boot:run
+
+This is the WRONG one:
+mvnw.cmd spring-boot:run #
+
+
+So heres how i combineded my React frontend with my Spring Boot backend:
+
+1. **Build the React frontend**:
+   - Navigate to your React project directory
+   - Run npm run build to generate a production build of your React application.
+   - This will create a build directory containing the optimized and minified static files (HTML, CSS, JavaScript) for your frontend.
+
+2. **Copy the built frontend assets to Spring Boot**:
+   - In your Spring Boot project Copy the contents of the build directory from your React project into the 
+    src/main/resources/static directory of your Spring Boot project.
+
+3. **Configure Spring Boot to serve the frontend**:
+   - In your Spring Boot project, create a new Java class WebConfig that extends WebMvcConfigurer. 
+   This class will be used to configure Spring MVC to serve the React frontend.
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/");
+    }
+}
+   - In this configuration, we're telling Spring Boot to serve any static resources
+    (including the React frontend files) from the classpath:/static/ location, which corresponds to the
+     src/main/resources/static directory.
+
+4. **Update your Spring Boot main class**:
+   - In your Spring Boot main class (the class with the @SpringBootApplication annotation), make sure to import the WebConfig class.
+
+import com.example.myproject.WebConfig;
+
+
+After following these steps, your Spring Boot application will be able to serve the React
+frontend from the static directory. You can then proceed launching your app using maven:
+
+Run the combined application locally**:
+Navigate to your Spring Boot project directory (e.g., my-project/backend/my-spring-boot-project).
+If you're using Maven, run mvnw.cmd spring-boot:run to start the Spring Boot application.
+
+Once the application is running, you can access it by opening a web browser and navigating to http://localhost:8080
+(or the configured port).
+
+
+By following these steps, you've combined your React frontend with your Spring Boot backend, allowing the backend to serve
+the frontend files and handle any API requests from the frontend. The combination process is the same whether you plan to run the
+application locally or host it on a server.
