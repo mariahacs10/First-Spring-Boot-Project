@@ -1,5 +1,11 @@
 package com.example.cardatabase.firstapp;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -11,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 //This annotation enables Cross-Origin Resource Sharing (CORS) for requests originating from the specified URL 
 //(http://192.168.68.115:3000 in this case). 
-@CrossOrigin("http://192.168.68.115:3000")
+@CrossOrigin("http://192.168.68.114:3000")
 //This interface provides methods for configuring various aspects of Spring MVC.
 //This class, WebConfig, implements this interface to provide its own configurations.
 public class WebConfig implements WebMvcConfigurer {

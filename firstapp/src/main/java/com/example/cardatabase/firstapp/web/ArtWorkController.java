@@ -14,7 +14,7 @@ import com.example.cardatabase.firstapp.domain.ArtWork;
 import com.example.cardatabase.firstapp.model.ArtWorkRepository;
 
 @RestController
-@CrossOrigin("http://192.168.68.115:3000")
+@CrossOrigin("http://192.168.68.114:3000")
 public class ArtWorkController {
 	
 	private final ArtWorkRepository repository;
@@ -23,6 +23,7 @@ public class ArtWorkController {
         this.repository = repository;
     }
     
+   
     @GetMapping("/artWork")
 	public Iterable<ArtWork> getArtWork(){
 		//fetch and return cars

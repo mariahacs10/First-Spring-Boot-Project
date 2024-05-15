@@ -8,8 +8,7 @@ import com.example.cardatabase.firstapp.domain.Boats;
 import com.example.cardatabase.firstapp.model.BoatRepository;
 
 @RestController
-@CrossOrigin("http://192.168.68.115:3000")
-
+@CrossOrigin("http://192.168.68.114:3000")
 public class BoatController {
 	
 	private final BoatRepository repository;

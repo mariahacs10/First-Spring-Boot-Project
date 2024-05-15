@@ -20,6 +20,7 @@ import com.example.cardatabase.firstapp.model.BoatRepository;
 import com.example.cardatabase.firstapp.model.CarRepository;
 import com.example.cardatabase.firstapp.model.OwnerRepository;
 import com.example.cardatabase.firstapp.service.ApiKeyService;
+import com.example.cardatabase.firstapp.WebConfig;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
