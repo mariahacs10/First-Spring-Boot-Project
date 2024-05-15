@@ -1,0 +1,17 @@
+MAJOR ISSUE!
+
+I had a major issue, and the issue was i needed to change my ip address again, 
+make sure if you ever needed to check your ip adress and update it do this:
+
+Open the Command Prompt. You can do this by searching for "cmd" in the Start menu search bar and pressing Enter.
+2.  In the Command Prompt window, type ipconfig and press 
+
+Under that adapter, find the line labeled "IPv4 Address". The number next to it is your local IP address.
+
+This is what it should look like:
+Connection-specific DNS Suffix  . :
+	...
+   IPv4 Address. . . . . . . . . . . : IP ADRESS
+    ...
+    
+Remember to change your react and also your android.
