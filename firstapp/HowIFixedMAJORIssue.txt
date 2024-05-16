@@ -15,3 +15,13 @@ Connection-specific DNS Suffix  . :
     ...
     
 Remember to change your react and also your android.
+
+---------------------------------------------------------
+
+
+You can either do addCorsMappings or addResourceHandlers, But in this case, addCorsMappings
+is better because allows you to configure CORS  URL patterns, HTTP methods, headers, and other aspects. 
+
+But addResourceHandlers is good if you just want resource handling and stuff even though both work.
+
+For my project i am going to use addCorsMapping.
