@@ -14,7 +14,8 @@ import com.example.cardatabase.firstapp.domain.ArtWork;
 import com.example.cardatabase.firstapp.model.ArtWorkRepository;
 
 @RestController
-@CrossOrigin("http://192.168.68.114:3000")
+//@CrossOrigin("http://192.168.68.114:3000")
+@CrossOrigin("https://react-carsandboats.onrender.com/")
 public class ArtWorkController {
 	
 	private final ArtWorkRepository repository;

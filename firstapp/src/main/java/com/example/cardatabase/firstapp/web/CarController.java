@@ -10,7 +10,8 @@ import com.example.cardatabase.firstapp.model.CarRepository;
 //@RestController annotation identifies that this class will be the controller
 //for the RESTful web service
 @RestController
-@CrossOrigin("http://192.168.68.114:3000")
+//@CrossOrigin("http://192.168.68.114:3000")
+@CrossOrigin("https://react-carsandboats.onrender.com/")
 public class CarController {
 	
 	//To be able to return cars from the database, we have to inject CarRepository into the 

@@ -30,7 +30,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //	     // This line is the  resource handling this method maps requests to static resources within the application.
 //	      registry.addResourceHandler("/**")
 //	             .addResourceLocations("classpath:/static/");
-//	
+//	http://192.168.68.114:3000
 //	 }
 //}
 
@@ -40,7 +40,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://192.168.68.114:3000") 
+        		.allowedOrigins("https://react-carsandboats.onrender.com/") 
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*");
     }

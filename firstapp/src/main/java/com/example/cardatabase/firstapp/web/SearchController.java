@@ -14,7 +14,8 @@ import com.example.cardatabase.firstapp.service.SearchService;
 
 @RestController
 @RequestMapping("/api/search")
-@CrossOrigin("http://192.168.68.114:3000")
+//@CrossOrigin("http://192.168.68.114:3000")
+@CrossOrigin("https://react-carsandboats.onrender.com/")
 public class SearchController {
     private final SearchService searchService;
 

@@ -69,7 +69,7 @@ public class FirstappApplication implements CommandLineRunner
 	
 	public static void main(String[] args) {
 		//If you are cloning this project be sure to comment this line out
-		Dotenv.load();
+		//Dotenv.load();
 		
 		SpringApplication.run(FirstappApplication.class, args);
 	}
